@@ -16,6 +16,7 @@ const buildPayload = async (env?: Record<string, string>) => {
     GITHUB_REPOSITORY: "test/test",
     GITHUB_SHA: "2fa67bb0998a39d9b697772782aa94599cfda489",
     GITHUB_REF: "refs/heads/test-patch-1",
+    GITHUB_REF_NAME: "test-patch-1",
     INPUT_ICON_SUCCESS: ":DONE:",
     INPUT_ICON_FAILURE: ":FAIL:",
     ...env,
@@ -79,6 +80,14 @@ test("expanded workflow", async () => {
   expect(rep.footer).toBe(
     "Linked Repo <https://github.com/test/test|test/test> | <test-workflow-url|View Workflow>"
   )
+})
+
+test("expanded workflow with branch_head", async () => {
+  const rep = await getAttachment({
+    INPUT_MESSAGE_FORMAT: "<{branch_url}|{branch_head}>",
+  })
+
+  expect(rep.text).toBe("<https://github.com/test/test/tree/test-patch-1|test-patch-1>")
 })
 
 test("workflow with mentions users", async () => {
